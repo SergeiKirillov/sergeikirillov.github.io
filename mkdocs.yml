@@ -8,7 +8,8 @@ theme:
 nav:
   - Главная: index.md
   - Содержание: content.md
-  - Database: DataBase/Clents.md
+  - Database: 
+    - Клиенты: DataBase/Clients.md
         
   - Пример заметки: note1.md
 
