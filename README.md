@@ -1,4 +1,1 @@
-# Список ресурсов
 
-- 📁 DataBase
-  - [Клиенты](DataBase/%D0%9A%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D1%8B.md)
