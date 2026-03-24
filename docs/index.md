@@ -5,5 +5,5 @@
 ## Разделы
 - [Пример заметки](note1.md)
 - [Содержание](content.md)
-- [Клиенты для баз данных](DataBase\Clients.md)
+- [Клиенты для баз данных](DataBase/Clients.md)
 
