@@ -4,5 +4,5 @@
 
 ## Разделы
 - [Пример заметки](note1.md)
-- [Обновления](Block_Update_Windows11.md)
+- [Обновления]([Обновления](Block_Update_Windows11.md))
 
