@@ -1,14 +1,14 @@
-site_name: Установка и настройка Windows
+site_name: Мои заметки
 site_description: База знаний
-site_author: SergeiAKir  
+site_author: SergeiAKir
 
 theme:
   name: material
 
 nav:
   - Главная: index.md
-  - Доп Меню: 
-      - прочти меня: README.md
+  - Содержание: README.md
+  - Пример заметки: note1.md
 
 markdown_extensions:
   - admonition
