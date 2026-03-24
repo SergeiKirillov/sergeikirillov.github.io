@@ -1,0 +1,2 @@
+- download URL=https://winhelp2002.mvps.org/hosts.htm
+- ++++++[GitHub - StevenBlack/hosts](https://github.com/StevenBlack/hosts)
