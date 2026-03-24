@@ -8,6 +8,8 @@ theme:
 nav:
   - Главная: index.md
   - Содержание: content.md
+  - Database: DataBase/Clents.md
+        
   - Пример заметки: note1.md
 
 markdown_extensions:
