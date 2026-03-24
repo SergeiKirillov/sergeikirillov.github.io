@@ -7,7 +7,7 @@ theme:
 
 nav:
   - Главная: index.md
-  - Содержание: README.md
+  - Содержание: content.md
   - Пример заметки: note1.md
 
 markdown_extensions:
