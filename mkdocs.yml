@@ -6,7 +6,7 @@ theme:
   name: material
 
 nav:
-  - Главная: index_0.md
+  - Главная: index.md
   - Обновления:
       - Блокировка обновления до Windows 11: Блокировка обновления до Windows 11.md
 
