@@ -7,8 +7,8 @@ theme:
 
 nav:
   - Главная: readme.md
-  - Database:
-      - Программы клиенты: клиенты.md
+  - Обновления:
+      - Блокировка обновления до Windows 11: Блокировка обновления до Windows 11.md
 
 markdown_extensions:
   - admonition
