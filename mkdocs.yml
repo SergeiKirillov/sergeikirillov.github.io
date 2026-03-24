@@ -8,7 +8,7 @@ theme:
 nav:
   - Главная: index.md
   - Доп Меню: 
-      - прочти меня: readme.md
+      - прочти меня: README.md
 
 markdown_extensions:
   - admonition
