@@ -8,7 +8,7 @@ theme:
 nav:
   - Главная: index.md
   - Обновления:
-      - Блокировка обновления до Windows 11: Block_Update_Windows11.md
+      - Блокировка обновления до Windows 11: [Обновления](Block_Update_Windows11.md)
 
 markdown_extensions:
   - admonition
