@@ -1,1 +1,0 @@
-Скрипты - [AutoHotkey](https://www.autohotkey.com/) + скрипт OneKey -> (Win+E -> shell:startup)
