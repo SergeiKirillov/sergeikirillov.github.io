@@ -2,7 +2,7 @@ site_name: Помощь в установке и настройке Windows
 site_description: База знаний
 site_author: SergeiAKir
 
-theme: readthedocs
+theme: material
 
 nav:
   - Главная: index.md
