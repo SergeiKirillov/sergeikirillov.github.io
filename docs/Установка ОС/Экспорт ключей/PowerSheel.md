@@ -1,6 +1,0 @@
-1. Нажми **Пуск → PowerShell (администратор)**
-2. Выполни команду:
-`(Get-CimInstance -query 'select * from SoftwareLicensingService').OA3xOriginalProductKey`
-👉 Если ключ есть в BIOS — он **отобразится полностью (25 символов)**  
-👉 Если пусто — значит ключа в UEFI нет
-
