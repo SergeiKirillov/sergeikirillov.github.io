@@ -1,1 +1,0 @@
- Динамичные обои - [Dynamic Theme](https://apps.microsoft.com/detail/9nblggh1zbkw?hl=ru-ru&gl=US)

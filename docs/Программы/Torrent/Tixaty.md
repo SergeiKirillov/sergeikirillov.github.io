@@ -1,1 +1,0 @@
-- [Tixaty](https://www.tixati.com/download/)
