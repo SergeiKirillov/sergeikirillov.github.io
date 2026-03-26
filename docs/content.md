@@ -1,6 +1,5 @@
-# DataDase
-[[Clients]]
-
+# DataВase
+[Программы для подключения к БД](content/DataBase/Clients.md)
 
 # Железо ПК
 ## HDD
@@ -11,3 +10,5 @@
 
 ## USB
 [Восстановление](content/HardWare/USB/Восстановление.md)
+
+# Tweak
