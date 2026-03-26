@@ -9,6 +9,14 @@ nav:
   - Содержание: 
     - Database: 
       - Клиенты: DataBase/Clients.md
+    - HardWare:
+      - HDD:
+        - Тестирование: Тестирование.md
+      - Printer:
+        - Картридж: Картридж.md
+      - USB:
+        - Воссстановление: Воссстановление.md
+  
     - Пример заметки: note1.md
 
 markdown_extensions:
