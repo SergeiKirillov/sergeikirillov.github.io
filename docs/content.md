@@ -1,3 +1,7 @@
+# DataDase
+[[Clients]]
+
+
 # Железо ПК
 ## HDD
 [Тестирование](content/HardWare/HDD/Тестирование.md)
