@@ -6,7 +6,7 @@ theme: readthedocs
 
 nav:
   - Главная: index.md
-  - Содержание: content.md
+  - Содержание: 
     - Database: 
       - Клиенты: DataBase/Clients.md
     - Пример заметки: note1.md
