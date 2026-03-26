@@ -1,0 +1,26 @@
+- настройка стартовой станицы и новой вкладки
+	- edge://settings/startHomeNTP
+- QUIC
+	- `chrome://flags/#enable-quic`
+	- `edge://flags/#enable-quic`
+- Очистка кэша
+	- Ctrl+Shift+Delete -> временные файлы и файлы кэша
+- Открыть вкладки из  предыдущего сеанса
+	- `edge://settings/startHomeNTP`
+- Политика
+	- gpedit.msc
+		- Конфигурация компьютера->Компоненты Windows-> Microsoft Edge
+			- Разрешить допуск к среде разработчика -> Enable
+			- _Разрешить настройку поисковой системы->Enable_
+			- _Hастроить предложение поисковых запросов в адресной строке -> Enable_
+			- _Настроить дополнительные поисковые системы-> https://www.google.com/search?q={searchTerms}_
+			- _Настроить поисковые системы по умолчанию -> https://www.google.com/search?q={searchTerms} _
+			- 
+	- `edge://policy/`
+		- DefaultSearchProviderEnabled
+		- DefaultSearchProviderName
+		- DefaultSearchProviderSearchURL
+			- `[HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome]`
+			- `"DefaultSearchProviderSearchURL"="https://www.google.com/search?q={searchTerms}"`
+- Поиск
+	- `edge://settings/privacy/services/search`
