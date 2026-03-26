@@ -5,9 +5,8 @@ site_author: SergeiAKir
 theme: readthedocs
 
 nav:
-  - Главная: index.md
-  - Содержание: content.md
-      
+  - Содержание: index.md
+       
 markdown_extensions:
   - admonition
   - toc:
