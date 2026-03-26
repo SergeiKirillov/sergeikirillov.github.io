@@ -6,18 +6,42 @@ theme: readthedocs
 
 nav:
   - Главная: index.md
-  - Содержание: 
-    - Database: 
-      - Клиенты: DataBase/Clients.md
-    - HardWare:
-      - HDD:
-        - Тестирование: HardWare/HDD/Тестирование.md
-      - Printer:
-        - Картридж: HardWare/Printer/Картридж.md
-      - USB:
-        - Воссстановление: HardWare/USB/Воссстановление.md
-  
-    - Пример заметки: note1.md
+  - Содержание:
+      - Database:
+          - Клиенты: DataBase/Clients.md
+      - HardWare:
+          - HDD:
+              - Тестирование: HardWare/HDD/Тестирование.md
+          - Printer:
+              - Картридж: HardWare/Printer/Картридж.md
+          - USB:
+              - Воссстановление: HardWare/USB/Воссстановление.md
+      - Ссылки:
+          - Download:
+              - Управление загруками: Link/Download/Manager.md
+          - Драйвер:
+              - Сборки: Link/Driver/Pack.md
+          - Google:
+              - Данные аккаунта: Link/Google/AkkauntData.md
+              - Анти пользователь: Link/Google/AntiUser.md
+              - Keep: Link/Google/Keep.md
+          - MicroSoft:
+              - Ресурсы: Link/MicroSoft/Resursi.md
+          - Операционные системы:
+              - Linux: Link\OC\Linux.md
+              - Windows: Link\OC\Windows.md
+          - Поиск уязвимости:
+              - Дырки: Link\Search\Bag.md
+          - Техника:
+              - Автомобили: Link\Tehnika\Car.md
+          - Torrent:
+              - Сайты: Link\Torrent\Sait.md
+              - WWWW: Link\Torrent\WWW.md
+          - Обучающие ресурсы: Link\InternetLean.md
+          - Сайты РК: Link\RK.md
+          - Сайты с софтом: Link\soft.md
+
+      - Пример заметки: note1.md
 
 markdown_extensions:
   - admonition
