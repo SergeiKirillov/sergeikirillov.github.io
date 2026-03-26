@@ -15,3 +15,5 @@
 ## Браузер
 [Сборник RSS](content/Tweak/Browser/RSS/AgregftorRSS.md)
 [Поиск RSS](content/Tweak/Browser/RSS/SeachRSS.md)
+## Журнал событий
+[Коды событий](content/Tweak/Журнал%20событий/code.md)
