@@ -7,9 +7,9 @@ theme: readthedocs
 nav:
   - Главная: index.md
   - Содержание: content.md
-    - Database: 
-      - Клиенты: DataBase/Clients.md
-    - Пример заметки: note1.md
+   - Database: 
+    - Клиенты: DataBase/Clients.md
+   - Пример заметки: note1.md
 
 markdown_extensions:
   - admonition
