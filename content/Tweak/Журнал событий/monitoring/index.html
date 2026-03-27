@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="SergeiAKir">
+        
+        <link rel="shortcut icon" href="../../../../img/favicon.ico">
+        <title>Monitoring - Помощь в установке и настройке Windows</title>
+        <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../../..">Помощь в установке и настройке Windows</a>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="2"><a href="#_1" class="nav-link">Идея – мониторинг журнала событий</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#windows" class="nav-link">О различных типах журналов событий в Windows</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#windows_1" class="nav-link">Мониторинг журналов Windows</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#_7" class="nav-link">Мониторинг журналов приложений и служб</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h2 id="_1">Идея – мониторинг журнала событий<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><a href="https://www.outsidethebox.ms/12241/#event">Известно</a>, что при выходе из сна в журнал <strong>Система</strong> (System) пишется событие с кодом <strong>1</strong> от источника <strong>Microsoft-Windows-Power-Troubleshooter</strong>.</p>
+<h2 id="windows">О различных типах журналов событий в Windows<a class="headerlink" href="#windows" title="Permanent link">&para;</a></h2>
+<p><img alt="" src="../images/Pasted%20image%2020260301082531.png" />
+- <strong>Журналы Windows</strong>. Это старые журналы: Приложения, Безопасность, Установка, Система и что-то еще по мелочи.
+- <strong>Журналы приложений и служб</strong>. Десятки новых журналов появились в Windows Vista. Они работают на основе <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/event-tracing-for-windows--etw-">ETW</a> и событий .NET.</p>
+<h2 id="windows_1">Мониторинг журналов Windows<a class="headerlink" href="#windows_1" title="Permanent link">&para;</a></h2>
+<p>Выход из сна регистрируется в журнале Система. Для журналов Windows быстро нашлись два родственных способа:
+- <a href="https://web.archive.org/web/20210312161823/https:/community.idera.com/database-tools/powershell/powertips/b/tips/posts/responding-to-new-event-log-entries-part-2">создание фонового задания PowerShell</a> для мониторинга журнала с помощью <a href="https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.eventlog">класса EventLog</a>
+- регистрация события WMI (<a href="https://learn-powershell.net/2013/08/02/powershell-and-events-wmi-temporary-event-subscriptions/">временная</a> или <a href="https://learn-powershell.net/2013/08/14/powershell-and-events-permanent-wmi-event-subscriptions/">постоянная</a>) для отслеживания системных событий
+Мне приглянулся первый вариант, потому что в примере нужно был лишь поменять название журнала, ИД и источник события. Я лишь слегка заточил его под выход из сна.</p>
+<h3 id="_2">Скрипт<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>Командлет <strong>Register-ObjectEvent</strong> по сути <a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/register-objectevent?view=powershell-7.2#example-2-specify-an-action-to-respond-to-an-event">создает фоновое задание</a> (PowerShell job).</p>
+<pre><code class="language-powershell"># Запускать от администратора
+# Журнал (Get-EventLog -AsString)
+$log =[System.Diagnostics.EventLog]'System'
+$log.EnableRaisingEvents=$true
+
+# Имя фонового задания
+$jobname='ResumeFromSleep'
+
+ # Действия при появлении события 
+ $action   = { 
+     # Путь к файлу с отловленными событиями 
+     $logFile   =   &quot;C:\temp\ResumeFromSleep.txt&quot; 
+     $entry   =   $Event  .SourceEventArgs.Entry    
+     # Искомое событие: ID 1 от 'Microsoft-Windows-Power-Troubleshooter' 
+     if   (  $entry  .EventId   -eq   1   -and   $entry  .Source   -eq   'Microsoft-Windows-Power-Troubleshooter'  ) { 
+         # Сообщение 
+         $msg   =   &quot;Resumed from sleep: event $($entry.EventId) from $($entry.Source) is: $($entry.Message)&quot;        
+         $msg   |   Out-File   -Append   -FilePath   $logFile   -Encoding   Unicode         
+         Write-Host   $msg 
+     } 
+ } 
+ # Отменяем регистрацию предыдущих фоновых заданий с таким же именем 
+ Unregister-Event   -SourceIdentifier   $jobname   -ErrorAction   SilentlyContinue 
+ # Регистрируем и запускаем фоновую задачу 
+ $job   =   Register-ObjectEvent   -InputObject   $log   -EventName   EntryWritten   -SourceIdentifier   $jobname   -Action   $action 
+ Receive-Job   $job 
+ Write-Host   &quot;Monitoring started for Event ID 1 (Power-Troubleshooter).&quot; 
+ # Необязательно: блокируем появление приглашения на ввод следующей команды 
+ # Имеет смысл только для выполнения в консоли 
+ while   (  $true  ) {   Start-Sleep   -Seconds   1 } 
+ &lt;# остановка мониторинга и полное удаление фонового задания 
+ Get-Job -Name 'ResumeFromSleep' | Stop-Job -PassThru | Remove-Job 
+ #&gt; 
+</code></pre>
+<p>При наступлении события (выходе из сна) его свойства выводятся на экран и выполняется запись в текстовый файл, что вы можете легко изменить под свои нужды.</p>
+<h3 id="_3">Демо<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>Тестовое событие пишется в журнал утилитой <strong>eventcreate</strong>, но смысл тот же. Каждое событие одновременно выводится в консоль и текстовый файл, изменения в котором отслеживает командлет <strong>Get-Content</strong>.
+<img alt="" src="../images/demo-monitoring.mp4" /></p>
+<h3 id="_4">Организация запуска скрипта<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>У работы фоновых заданий есть неочевидные тонкости.</p>
+<h4 id="_5">Тестовый запуск<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<p>Для теста просто вызовите скрипт из консоли: <code>.\ResumeFromSleep.ps1</code>. Теперь можно отправить систему в сон, а после выхода проверить наличие записей в тестовом файле на диске.
+Для отмены мониторинга фоновое задание нужно остановить. Заодно можно и удалить.</p>
+<pre><code class="language-powershell">Get-Job -Name ResumeFromSleep | Stop-Job -PassThru | Remove-Job
+</code></pre>
+<p>Учтите, что фоновая работа зависит от наличия родительского процесса. Закрыв текущую сессию консоли, вы также прекратите отслеживание.</p>
+<h4 id="_6">Регулярный запуск<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<p>В общем случае скрипт нужно запускать отдельным процессом. Для разовых запусков подходит такой вариант:</p>
+<pre><code class="language-powershell">Start-Process -Verb RunAs -FilePath powershell -ArgumentList &quot;-WindowStyle hidden -ex bypass -File C:\Path\ResumeFromSleep.ps1&quot;
+</code></pre>
+<p>Для регулярной работы имеет смысл создать для запуска… запланированное задание на однократный запуск от имени SYSTEM или <a href="https://www.outsidethebox.ms/21628/#_5610">для всех пользователей</a>! Да, по условиям задачи планировщик не выполняет такие задания автоматически. Однако на запуск по требованию это не распространяется. Поэтому можно воспользоваться разделом реестра Run для выполнения при старте системы!</p>
+<p>Код ниже создает задание ResumeFromSleep для запуска нашего скрипта таким образом, чтобы оно выполнялось при работе от батареи и не завершалось автоматически. Этот модуль PowerShell я разбирал в статье про <a href="https://www.outsidethebox.ms/20351/#_Toc132">выполнение заданий на закате и восходе солнца</a>.</p>
+<pre><code class="language-powerShell"> #Переменные 
+ #путь к скрипту и УЗ системы 
+ $path   =   &quot;C:\Program Files\Scripts&quot; 
+ $system   =   &quot;NT AUTHORITY\SYSTEM&quot; 
+ #Создание задания 
+ $taskname   =   &quot;ResumeFromSleep&quot; 
+ #Общие: выполнять с наивысшими правами от имени системы вне зависимости от входа 
+ $principal   =   New-ScheduledTaskPrincipal   -UserId   $system   -LogonType   ServiceAccount 
+ #Триггер 
+ $trigger   =   New-ScheduledTaskTrigger   -Once   -At   00:01 
+ #Параметры: #запускать при работе от батареи; немедленно если пропущено; не останавливать 
+ $settings   =   New-ScheduledTaskSettingsSet   -AllowStartIfOnBatteries   -StartWhenAvailable   -ExecutionTimeLimit   0 
+ #Команда... 
+ $execute   =   &quot;powershell&quot; 
+ #... и ее параметры командной строки 
+ $argument   =   &quot;-ExecutionPolicy Bypass -WindowStyle Hidden -file $path\ResumeFromSleep.ps1&quot; 
+ #Действие: &quot;команда + параметры командной строки&quot; 
+ $action   =   New-ScheduledTaskAction   -Execute   $execute   -Argument   $argument 
+ #Создать задание в планировщике 
+ Register-ScheduledTask   -TaskName   $taskname   -Action   $action   -Trigger   $trigger   -Settings   $settings   -Principal   $principal 
+ &lt;# 
+ $trigger = @( 
+     #Запускать ежедневно сразу после полуночи (не пробуждая ПК) 
+     $(New-ScheduledTaskTrigger -Daily -At 00:01), 
+     #Запускать при входе пользователя в систему 
+     $(New-ScheduledTaskTrigger -AtLogon) 
+ ) 
+ #&gt; 
+</code></pre>
+<p>Запуск задания проще всего добавить в HKLM старой доброй <strong>reg add</strong>:</p>
+<pre><code class="language-powershell">reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v ResumeFromSleep /t REG_SZ /d &quot;powershell -ex bypass -noprofile -command Start-ScheduledTask -Taskname ResumeFromSleep&quot;
+</code></pre>
+<p>Теперь запланированное задание будет форсироваться при старте ОС и запускать «невидимую» фоновую задачу PowerShell в <a href="https://www.outsidethebox.ms/21628/#_5610">сеансе 0</a> для мониторинга событий в журнале.</p>
+<p>Чтобы остановить отслеживание, просто завершите запланированное задание:</p>
+<pre><code class="language-powershell">Stop-ScheduledTask -Taskname ResumeFromSleep
+</code></pre>
+<p><img alt="" src="../images/Pasted%20image%2020260301084603.png" /></p>
+<h2 id="_7">Мониторинг журналов приложений и служб<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Допустим, мы хотим выполнять задачу при переходе системы в режим энергосбережения. Для начала надо выяснить, какое событие при этом пишется в журналы.</p>
+<h3 id="_8">Поиск журнала и события<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>Это  <a href="https://t.me/sterkin_ru/1399">несложно организовать</a> с помощью <strong>Get-WinEvent</strong>. Включив режим экономии батареи, вы помимо прочих найдете такое событие:</p>
+<ul>
+<li>журнал: <code>Microsoft-Windows-PushNotification-Platform/Operational</code></li>
+<li>ИД: <code>1025</code></li>
+<li>сообщение: <code>A Power event was fired: BatterySaverStateChange [PowerEventType] true [Enabled].</code></li>
+<li>пользователь: <code>система, S-1-5-18</code></li>
+</ul>
+<p>В <em>данном</em> случае следует конкретизировать пользователя. Дело в том, что одновременно регистрируется такое же событие от имени интерактивного пользователя. Если опираться только на ИД события, скрипт отработает дважды.</p>
+<p><img alt="" src="../images/Pasted%20image%2020260301084704.png" />
+Итак, у нас есть критерии для мониторинга.</p>
+<h3 id="_9">Скрипт<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>Для отслеживания журналов приложений и служб предусмотрен класс <a href="https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.eventing.reader.eventlogwatcher?view=dotnet-plat-ext-6.0">EventLogWatcher</a>. Спасибо за подсказки, <a href="https://www.sysadmins.lv/">Вадимс Поданс</a>.</p>
+<pre><code class="language-powershell"># Запускать от администратора
+# Журнал
+$log = &quot;Microsoft-Windows-PushNotification-Platform/Operational&quot;
+$watcher = New-Object System.Diagnostics.Eventing.Reader.EventLogWatcher $log
+$watcher.Enabled = $true
+# Имя фонового задания
+$jobname = 'BatterySaver'
+# Действия при появлении события
+$action = {
+    # Путь к файлу с отловленными событиями
+    $logFile = &quot;C:\temp\BatterySaver.txt&quot;
+    $entry = $Event.SourceEventArgs.Entry    
+    # Искомое событие: ID 1025
+        if ($eventArgs.EventRecord.Id -eq 1025 -and
+            $eventArgs.EventRecord.UserID -eq 'S-1-5-18' -and
+            $eventArgs.EventRecord.FormatDescription() -eq 'A Power event was fired: BatterySaverStateChange [PowerEventType] true [Enabled].'
+        ) {        
+        # Сообщение
+        $msg = &quot;Triggered: event $($eventArgs.EventRecord.Id) from $($eventArgs.EventRecord.UserID) with message: $($eventArgs.EventRecord.FormatDescription())&quot;
+        $msg | Out-File -Append -FilePath $logFile -Encoding Unicode
+        # Необязательно: форсируем вывод в консоль (при использовании Receive-Job)
+        Write-Host $msg
+    }
+}
+# Отменяем регистрацию предыдущих фоновых заданий с таким же именем
+Unregister-Event -SourceIdentifier $jobname -ErrorAction SilentlyContinue
+$job = Register-ObjectEvent -InputObject $watcher -EventName 'EventRecordWritten' -SourceIdentifier $jobname -Action $action
+Receive-Job $job
+Write-Host &quot;Monitoring started for Event ID 1025&quot;
+# Необязательно: блокируем появление приглашения на ввод следующей команды
+# Имеет смысл только для выполнения в консоли
+while ($true) { Start-Sleep -Seconds 1 }
+&lt;# остановка мониторинга и полное удаление фонового задания
+Get-Job -Name 'BatterySaver' | Stop-Job -PassThru | Remove-Job
+$watcher.Dispose()
+#&gt;
+</code></pre>
+<p>Организация запуска скрипта такая же, как и в случае с мониторингом журнала события Windows.</p>
+<p>Протестировать действие при конкретном событии на компьютере без батареи не получится, но вы легко можете скорректировать скрипт под любой журнал и событие.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../../js/base.js"></script>
+        <script src="../../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

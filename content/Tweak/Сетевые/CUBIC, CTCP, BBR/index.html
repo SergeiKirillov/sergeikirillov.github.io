@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="SergeiAKir">
+        
+        <link rel="shortcut icon" href="../../../../img/favicon.ico">
+        <title>CUBIC, CTCP, BBR - Помощь в установке и настройке Windows</title>
+        <link href="../../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../../../css/brands.min.css" rel="stylesheet">
+        <link href="../../../../css/solid.min.css" rel="stylesheet">
+        <link href="../../../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../../..">Помощь в установке и настройке Windows</a>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="2"><a href="#windows-from-cubic-to-ctcp" class="nav-link">Windows: from CUBIC to CTCP</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#linux-from-cubic-to-bbr" class="nav-link">Linux: from CUBIC to BBR</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<p>Наиболее часто используемым алгоритмом управления перегрузкой TCP является ==CUBIC==, который широко применяется как в Linux, так и в Windows.
+В дополнение к этому Google разработала и выпустила алгоритм ==BBR==, который продемонстрировал отличную производительность. 
+Microsoft также разработала и внедрила алгоритм ==Compound TCP== для Windows Server. Здесь мы кратко опишем процесс перехода с CUBIC на эти два алгоритма.</p>
+<h2 id="windows-from-cubic-to-ctcp">Windows: from CUBIC to CTCP<a class="headerlink" href="#windows-from-cubic-to-ctcp" title="Permanent link">&para;</a></h2>
+<p>Сначала давайте проверим текущий алгоритм управления перегрузкой TCP с помощью команды 
+<code>netsh int tcp show global</code>, 
+а дополнительную информацию можно найти с помощью команды 
+<code>netsh int tcp show supplemental</code> 
+Здесь вы можете увидеть текущий алгоритм. </p>
+<p>Переход CTCP</p>
+<pre><code class="language-Powershell">netsh int tcp set supplemental template=internet congestionprovider=CTCP
+netsh int tcp set supplemental template=internetcustom congestionprovider=CTCP
+netsh int tcp set supplemental template=Datacenter congestionprovider=DCTCP
+netsh int tcp set supplemental template=Datacentercustom congestionprovider=DCTCP
+</code></pre>
+<p>Возвращение назад,  CUBIC.</p>
+<pre><code class="language-PowerShell">netsh int tcp set supplemental template=internet congestionprovider=CUBIC
+netsh int tcp set supplemental template=internetcustom congestionprovider=CUBIC
+netsh int tcp set supplemental template=Datacenter congestionprovider=CUBIC
+netsh int tcp set supplemental template=Datacentercustom congestionprovider=CUBIC
+</code></pre>
+<h2 id="linux-from-cubic-to-bbr">Linux: from CUBIC to BBR<a class="headerlink" href="#linux-from-cubic-to-bbr" title="Permanent link">&para;</a></h2>
+<p>Actually, now we can simply switch to BBR from CUBIC by <code>sysctl</code> on Linux. Let’s check our current TCP congrestion control algorithm:</p>
+<pre><code class="language-fallback">sysctl net.ipv4.tcp_congestion_control
+</code></pre>
+<p>If the output is <code>net.ipv4.tcp_congestion_control = cubic</code> or something like that, means that our current algorithm is CUBIC, let’s edit <code>/etc/sysctl.conf</code> to change it to BBR:</p>
+<pre><code class="language-fallback">net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+</code></pre>
+<p>Now, save and apply using <code>sysctl -p</code>, check our algorithm again, we will see <code>net.ipv4.tcp_congestion_control = bbr</code>. By the way, it shows <code>ipv4</code> in the message, but don’t worry, it also works for IPv6.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../../js/base.js"></script>
+        <script src="../../../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
